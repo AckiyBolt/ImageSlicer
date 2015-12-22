@@ -1,4 +1,4 @@
-package ua.bolt;
+package ua.bolt.tbot.slicer;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
@@ -24,7 +24,7 @@ public class Main {
         Configuration config = loadConfiguration();
 
         TelegramBot bot = TelegramBotAdapter.build(config.api.token);
-        UpdateProcessor processor = new UpdateProcessor(bot);
+        UpdateProcessor processor = new UpdateProcessor(bot, config);
 
         while(true) {
             try {
@@ -47,9 +47,11 @@ public class Main {
     }
 
     private static Configuration loadConfiguration() {
-        return new Yaml().loadAs(
+        Configuration configuration = new Yaml().loadAs(
                 Main.class.getClassLoader().getResourceAsStream(CONFIG_FILE),
                 Configuration.class);
+        System.out.println("Configuration:\n" + configuration);
+        return configuration;
     }
 
     private static boolean isHelp(Update update) {

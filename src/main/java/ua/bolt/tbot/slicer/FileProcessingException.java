@@ -1,4 +1,4 @@
-package ua.bolt;
+package ua.bolt.tbot.slicer;
 
 /**
  * Created by kbelentsov on 22.12.2015.

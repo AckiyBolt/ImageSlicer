@@ -1,12 +1,11 @@
-package ua.bolt;
+package ua.bolt.tbot.slicer;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InputFile;
 import com.pengrad.telegrambot.response.GetFileResponse;
-import org.apache.commons.io.FileUtils;
-import ua.bolt.model.CutImageResult;
+import ua.bolt.tbot.slicer.model.CutImageResult;
 
 import java.io.File;
 import java.util.List;
@@ -17,13 +16,14 @@ import java.util.List;
 public class UpdateProcessor {
 
     private static final String MIME_TYPE = "application/zip";
-    private static final String TMP_DIR = "C:\\tmp\\";
 
     private TelegramBot api;
     private ImageCutter cutter;
+    private Configuration config;
 
-    public UpdateProcessor(TelegramBot api) {
+    public UpdateProcessor(TelegramBot api, Configuration config) {
         this.api = api;
+        this.config = config;
         this.cutter = new ImageCutter();
     }
 
@@ -32,7 +32,7 @@ public class UpdateProcessor {
         PhotoSize photo = photoSizes[photoSizes.length - 1];
 
         String updateId = String.valueOf(update.updateId());
-        String updateDir = TMP_DIR + updateId;
+        String updateDir = config.tempdir + updateId;
 
         GetFileResponse file = api.getFile(photo.fileId());
         String url = api.getFullFilePath(file.file());

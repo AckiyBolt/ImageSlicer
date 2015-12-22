@@ -1,7 +1,7 @@
-package ua.bolt;
+package ua.bolt.tbot.slicer;
 
 import org.imgscalr.Scalr;
-import ua.bolt.model.CutImageResult;
+import ua.bolt.tbot.slicer.model.CutImageResult;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -64,8 +64,6 @@ public class ImageCutter {
         int height = img.getHeight();
         int targetWidth = scaleToProportion(width, COLUMN_COUNT);
         int targetHeight = scaleToProportion(height, rowCount);
-
-        System.out.println(String.format("Change img size: %sx%s -> %sx%s", width, height, targetWidth, targetHeight));
 
         return Scalr.resize(img, Scalr.Method.ULTRA_QUALITY, targetWidth, targetHeight);
     }

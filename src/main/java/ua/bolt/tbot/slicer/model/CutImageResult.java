@@ -1,4 +1,4 @@
-package ua.bolt.model;
+package ua.bolt.tbot.slicer.model;
 
 import java.io.File;
 import java.util.Collections;

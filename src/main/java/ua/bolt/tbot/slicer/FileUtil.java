@@ -1,4 +1,4 @@
-package ua.bolt;
+package ua.bolt.tbot.slicer;
 
 import org.apache.commons.io.FileUtils;
 
