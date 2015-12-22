@@ -1,0 +1,7 @@
+
+api:
+    token:      token00000000
+    limit:      10
+    timeout:    10000
+    period:     2000
+tempdir:        /tmp/image-splitter
