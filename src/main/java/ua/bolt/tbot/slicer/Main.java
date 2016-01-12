@@ -76,10 +76,8 @@ public class Main {
     }
 
     private static boolean hasAcceptableSize(Update update) {
-        // TODO
         Document document = update.message().document();
         return document.fileSize() <= config.imagesizelimit;
-//        return true;
     }
 
     private static boolean hasPhotoFile(Update update) {

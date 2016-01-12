@@ -31,7 +31,7 @@ public class UpdateProcessor {
     }
 
     public void processFile(Update update) {
-        LoggingUtil.logProcess(update, logger);
+        logger.info("Process [file] request from {}", update.message().from().username());
 
         String updateId = String.valueOf(update.updateId());
         String updateDir = config.tempdir + updateId;
@@ -43,7 +43,7 @@ public class UpdateProcessor {
     }
 
     public void processPhoto(Update update) {
-        LoggingUtil.logProcess(update, logger);
+        logger.info("Process [photo] request from {}", update.message().from().username());
 
         PhotoSize[] photoSizes = update.message().photo();
         PhotoSize photo = photoSizes[photoSizes.length - 1];
@@ -74,7 +74,7 @@ public class UpdateProcessor {
     }
 
     public void processHelp(Update update) {
-        LoggingUtil.logProcess(update, logger);
+        logger.info("Process [help] request from {}", update.message().from().username());
 
         api.sendMessage(update.message().from().id(),
                 "" +

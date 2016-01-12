@@ -16,8 +16,4 @@ public class LoggingUtil {
     public static Logger getLogger(Object instance) {
         return LogManager.getLogger(instance.getClass());
     }
-
-    public static void logProcess(Update update, Logger logger) {
-        logger.info("Process request from {}", update.message().from().username());
-    }
 }
