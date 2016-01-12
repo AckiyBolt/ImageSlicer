@@ -3,6 +3,7 @@ package ua.bolt.tbot.slicer;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Chat;
+import com.pengrad.telegrambot.model.Document;
 import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
@@ -23,9 +24,11 @@ public class Main {
     private static final String CONFIG_FILE = "config.yaml";
     private static int offset;
 
+    private static Configuration config;
+
     public static void main(String[] args) throws Exception {
 
-        Configuration config = loadConfiguration();
+        config = loadConfiguration();
 
         TelegramBot bot = TelegramBotAdapter.build(config.api.token);
         UpdateProcessor processor = new UpdateProcessor(bot, config);
@@ -36,10 +39,9 @@ public class Main {
                 GetUpdatesResponse upd = bot.getUpdates(offset, config.api.limit, config.api.timeout);
                 List<Update> updates = upd.updates();
 
-                updates.stream().forEach(System.out::println);
-
                 updates.stream().filter(Main::isPrivate).filter(Main::isHelp).forEach(processor::processHelp);
                 updates.stream().filter(Main::isPrivate).filter(Main::hasPhoto).forEach(processor::processPhoto);
+                updates.stream().filter(Main::isPrivate).filter(Main::hasPhotoFile).filter(Main::hasAcceptableSize).forEach(processor::processFile);
 
                 offset = updates.get(updates.size() - 1).updateId() + 1;
 
@@ -59,6 +61,10 @@ public class Main {
         return configuration;
     }
 
+    private static boolean isPrivate(Update update) {
+        return update.message().chat().type() == Chat.Type.Private;
+    }
+
     private static boolean isHelp(Update update) {
         String text = update.message().text();
         return text != null && text.toLowerCase().matches("/help|/start");
@@ -69,7 +75,15 @@ public class Main {
         return photo != null && photo.length != 0;
     }
 
-    private static boolean isPrivate(Update update) {
-        return update.message().chat().type() == Chat.Type.Private;
+    private static boolean hasAcceptableSize(Update update) {
+        // TODO
+        Document document = update.message().document();
+        return document.fileSize() <= config.imagesizelimit;
+//        return true;
+    }
+
+    private static boolean hasPhotoFile(Update update) {
+        Document document = update.message().document();
+        return document != null && document.mimeType().contains("image");
     }
 }

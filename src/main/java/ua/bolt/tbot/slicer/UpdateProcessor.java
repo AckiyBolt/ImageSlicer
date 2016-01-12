@@ -30,6 +30,18 @@ public class UpdateProcessor {
         this.cutter = new ImageCutter();
     }
 
+    public void processFile(Update update) {
+        LoggingUtil.logProcess(update, logger);
+
+        String updateId = String.valueOf(update.updateId());
+        String updateDir = config.tempdir + updateId;
+
+        String fileId = update.message().document().fileId();
+        GetFileResponse file = api.getFile(fileId);
+
+        processImage(update, updateId, updateDir, file);
+    }
+
     public void processPhoto(Update update) {
         LoggingUtil.logProcess(update, logger);
 
@@ -40,6 +52,10 @@ public class UpdateProcessor {
         String updateDir = config.tempdir + updateId;
 
         GetFileResponse file = api.getFile(photo.fileId());
+        processImage(update, updateId, updateDir, file);
+    }
+
+    private void processImage(Update update, String updateId, String updateDir, GetFileResponse file) {
         String url = api.getFullFilePath(file.file());
 
         File fileOnDisc = FileUtil.getFileFromWeb(updateDir, updateId, url);
@@ -51,7 +67,7 @@ public class UpdateProcessor {
 
         Integer chatId = update.message().from().id();
 
-        api.sendMessage(chatId, "Done!\nSliced on rows: " + cutImageResult.getRowCount() + "\nHere is your zip archive. See ya");
+        api.sendMessage(chatId, "Зроблено!\nВийшло рядків: " + cutImageResult.getRowCount() + "\nОсьо архів із шматочками, до зустрічі ;)");
         api.sendDocument(chatId, new InputFile(MIME_TYPE, zip), update.message().messageId(), null);
 
         FileUtil.deleteDir(updateDir);
@@ -62,7 +78,8 @@ public class UpdateProcessor {
 
         api.sendMessage(update.message().from().id(),
                 "" +
-                        "Hello dear agent!\n" +
-                        "I'll help you cut banner for ingress mission set. Just send me a photo that you wish to slice =)");
+                        "Вітаю, агенте!\n" +
+                        "Я тобі допоможу порізать картинки на банери.\n" +
+                        "Просто відправ мені зображення, яке хочеш зробити банером, як картинку або файлом до 10Мб =)");
     }
 }

@@ -4,3 +4,4 @@ api:
     timeout:    10000
     period:     2000
 tempdir:        /tmp/image-splitter
+imagesizelimit: 10_000_000

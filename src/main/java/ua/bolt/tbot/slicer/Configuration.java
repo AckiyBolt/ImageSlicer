@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
  */
 public class Configuration {
 
+    public Integer imagesizelimit;
     public String tempdir;
     public Api api;
 
