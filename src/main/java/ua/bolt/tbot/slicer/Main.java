@@ -6,8 +6,10 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
+import org.apache.logging.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 import retrofit.RetrofitError;
+import ua.bolt.tbot.util.LoggingUtil;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
  * Created by kbelentsov on 22.12.2015.
  */
 public class Main {
+
+    private static final Logger logger = LoggingUtil.getLogger(Main.class);
 
     private static final String CONFIG_FILE = "config.yaml";
     private static int offset;
@@ -26,6 +30,7 @@ public class Main {
         TelegramBot bot = TelegramBotAdapter.build(config.api.token);
         UpdateProcessor processor = new UpdateProcessor(bot, config);
 
+        logger.info("Bot successfully initialized!");
         while(true) {
             try {
                 GetUpdatesResponse upd = bot.getUpdates(offset, config.api.limit, config.api.timeout);
@@ -41,7 +46,7 @@ public class Main {
                 Thread.sleep(config.api.period);
 
             } catch (RetrofitError e) {
-                System.out.println("Timeout. Retry");
+                logger.debug("Timeout. Retry");
             }
         }
     }
@@ -50,7 +55,7 @@ public class Main {
         Configuration configuration = new Yaml().loadAs(
                 Main.class.getClassLoader().getResourceAsStream(CONFIG_FILE),
                 Configuration.class);
-        System.out.println("Configuration:\n" + configuration);
+        logger.info("Configuration:\n{}", configuration);
         return configuration;
     }
 

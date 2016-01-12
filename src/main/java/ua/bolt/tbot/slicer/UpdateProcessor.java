@@ -5,7 +5,9 @@ import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InputFile;
 import com.pengrad.telegrambot.response.GetFileResponse;
+import org.apache.logging.log4j.Logger;
 import ua.bolt.tbot.slicer.model.CutImageResult;
+import ua.bolt.tbot.util.LoggingUtil;
 
 import java.io.File;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public class UpdateProcessor {
 
+    private static final Logger logger = LoggingUtil.getLogger(UpdateProcessor.class);
     private static final String MIME_TYPE = "application/zip";
 
     private TelegramBot api;
@@ -28,6 +31,8 @@ public class UpdateProcessor {
     }
 
     public void processPhoto(Update update) {
+        LoggingUtil.logProcess(update, logger);
+
         PhotoSize[] photoSizes = update.message().photo();
         PhotoSize photo = photoSizes[photoSizes.length - 1];
 
@@ -53,6 +58,8 @@ public class UpdateProcessor {
     }
 
     public void processHelp(Update update) {
+        LoggingUtil.logProcess(update, logger);
+
         api.sendMessage(update.message().from().id(),
                 "" +
                         "Hello dear agent!\n" +
